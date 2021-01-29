@@ -1,0 +1,80 @@
+.contenedorConceptos {
+
+	min-height: 45vh;
+	position: relative;
+
+}
+
+h1.transparente {
+
+	font-size: 6em;
+	text-align: center;
+	color: transparent;
+	-webkit-text-stroke: 2px #FF6B00;
+	width: 45%;
+	margin: auto;
+	border-bottom: 2px solid #FF6B00;
+
+}
+
+.content-all{
+
+	width: 210px;
+	margin: auto;
+	perspective: 800px;
+	position: relative;
+	margin-top: 50px;
+
+}
+
+.content-carrousel{
+
+	width: 100%;
+	position: absolute;
+	animation: rotar 50s infinite linear;
+	transform-style: preserve-3d;
+
+}
+
+.content-carrousel:hover{
+
+	animation-play-state: paused;
+	cursor: pointer;
+
+}
+
+.content-carrousel figure{
+
+	width: 100%;
+	height: 128px;
+	overflow: hidden;
+	position: absolute;
+	box-shadow: 0px 0px 20px 0px black;
+	transition: all 300ms;
+
+}
+
+.content-carrousel figure:hover{
+
+	box-shadow: 0px 0px 0px 0px black;
+	transition: all 300ms;
+
+}
+
+.content-carrousel figure:nth-child(1){transform: rotateY(0deg) translateZ(300px);}
+.content-carrousel figure:nth-child(2){transform: rotateY(40deg) translateZ(300px);}
+.content-carrousel figure:nth-child(3){transform: rotateY(80deg) translateZ(300px);}
+.content-carrousel figure:nth-child(4){transform: rotateY(120deg) translateZ(300px);}
+.content-carrousel figure:nth-child(5){transform: rotateY(160deg) translateZ(300px);}
+.content-carrousel figure:nth-child(6){transform: rotateY(200deg) translateZ(300px);}
+.content-carrousel figure:nth-child(7){transform: rotateY(240deg) translateZ(300px);}
+.content-carrousel figure:nth-child(8){transform: rotateY(280deg) translateZ(300px);}
+.content-carrousel figure:nth-child(9){transform: rotateY(320deg) translateZ(300px);}
+.content-carrousel figure:nth-child(10){transform: rotateY(360deg) translateZ(300px);}
+
+.content-carrousel img{
+
+	width: 100%;
+	transition: all 100ms;
+
+}
