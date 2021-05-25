@@ -1,8 +1,22 @@
-<IfModule mod_rewrite.c>
-RewriteEngine On
-RewriteBase /
-RewriteRule ^index\.html$ - [L]
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule . /index.html [L]
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteBase /
+RewriteRule ^index\.html$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.html [L]
+Header always append X-Frame-Options DENY
+Header set X-Content-Type-Options "nosniff"
+header always set X-XSS-Protection "1; mode=block"
+Header set Custom-Header-Name "ValTec"
+## Force SSL
+##  RewriteCond %{HTTPS} !=on
+##  RewriteRule ^https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+## Si obtenemos error 401 al Forzar el SSL podemos probar con
+##  RewriteCond %{HTTPS} !on
+##  RewriteCond %{THE_REQUEST} ^(GET|HEAD)\ ([^\ ]+)
+##  RewriteRule (.*) https://%{HTTP_HOST}%2 [L,R=301]
 </IfModule>
+order allow,deny
+deny from all

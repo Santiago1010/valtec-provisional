@@ -5,79 +5,38 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-
-  	documento: null,
-    rol: null,
-    ruta: 'https://sistema.valtec.systems/recepcion/',
-    //ruta: 'http://localhost/valtec/recepcion/',
-
+    route: 'http://localhost/valtec/',
+    dialogLogin: false,
+    snackbar: false,
+    snackbarText: '',
   },
   actions: {
-
-    validarInicio({ commit }, usuario) {
-
-      commit('actualizarDocumento', usuario.documento_usuario);
-
-      commit('actualizarRol', usuario.id_rol);
-
-      axios.post(this.state.ruta + 'recepcionLogin.php', {iniciarDocumento:usuario.documento_usuario}).then(response => {
-
-        if (response.data == true || response.data == 1) {
-
-          return true;
-
-        }
-
-      }); 
-
+    openCloseDialog({ commit }, newState) {
+      commit('dialogLoginOpenClose', newState)
     },
-
-    verificarInicio(state) {
-
-      if (this.state.documento == null && this.state.rol == null) {
-
-        window.location.href = '/';
-
-      }else {
-
-        console.log(this.state.documento + ", " + this.state.rol);
-
-      }
-
+    modifyStateSnackbar({ commit }, newState) {
+      commit('openCloseSnackbar', newState)
     },
-
-    eliminarSesion({ commit }) {
-
-      commit('actualizarDocumento', null);
-
-      commit('actualizarRol', null);
-
-      return true;
-
-    },
-
+    modifyTextSnackbar({ commit }, newText) {
+      commit('newTextSnackbar', newText)
+    }
   },
   mutations: {
-
-    actualizarDocumento(state, documento) {
-
-      state.documento = documento
-
+    dialogLoginOpenClose(state, newState) {
+      state.dialogLogin = newState;
     },
-
-    actualizarRol(state, rol) {
-
-      state.rol = rol
-
-    }
-
+    openCloseSnackbar(state, newState) {
+      state.snackbar = newState;
+    },
+    newTextSnackbar(state, newText) {
+      state.snackbarText = newText;
+    },
   },
   getters: {
-
-    documento: state => state.documento,
-    rol: state => state.rol,
-    ruta: state => state.ruta
-
+    route: state => state.route,
+    dialogLogin: state => state.dialogLogin,
+    snackbar: state => state.snackbar,
+    snackbarText: state => state.snackbarText
   }
 
 })
