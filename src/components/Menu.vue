@@ -13,37 +13,73 @@
       <v-list nav dense>
         <v-list-item-group active-class="orange accent-4--text text--accent-4">
 
-          <v-list-item to='/'>
-            <v-list-item-icon><v-icon>mdi-home</v-icon></v-list-item-icon>
-            <v-list-item-title>Inicio</v-list-item-title>
+          <div v-if="session == false">
+            <v-list-item to='/'>
+              <v-list-item-icon><v-icon>mdi-home</v-icon></v-list-item-icon>
+              <v-list-item-title>Inicio</v-list-item-title>
+            </v-list-item>
+
+            <v-list-item @click="openCloseDialog(true)">
+              <v-list-item-icon><v-icon>login</v-icon></v-list-item-icon>
+              <v-list-item-title>Iniciar sesión</v-list-item-title>
+            </v-list-item>
+
+            <v-list-item to='/registro'>
+              <v-list-item-icon><v-icon>create</v-icon></v-list-item-icon>
+              <v-list-item-title>Registrarse</v-list-item-title>
+            </v-list-item>
+
+            <v-list-item to='/contrasena'>
+              <v-list-item-icon><v-icon>vpn_key</v-icon></v-list-item-icon>
+              <v-list-item-title>Recuperar contraseña</v-list-item-title>
+            </v-list-item>
+
+            <!--<v-list-item to='/estadisticas'>
+              <v-list-item-icon><v-icon>analytics</v-icon></v-list-item-icon>
+              <v-list-item-title>Estadísticas</v-list-item-title>
+            </v-list-item>-->
+
+            <v-divider></v-divider>
+
+            <v-list-item @click="sideMenu = false">
+              <v-list-item-icon><v-icon>cancel</v-icon></v-list-item-icon>
+              <v-list-item-title>Cerrar</v-list-item-title>
+            </v-list-item>
+          </div>
+          <div v-else>
+            <v-list-item to='/'>
+              <v-list-item-icon><v-icon>not_started</v-icon></v-list-item-icon>
+              <v-list-item-title>Inicio</v-list-item-title>
+            </v-list-item>
+
+            <v-list-item to='/inicio'>
+              <v-list-item-icon><v-icon>login</v-icon></v-list-item-icon>
+              <v-list-item-title>Iniciar sesión</v-list-item-title>
+            </v-list-item>
+
+            <v-list-item to='/inicio/resultados'>
+              <v-list-item-icon><v-icon>dns</v-icon></v-list-item-icon>
+              <v-list-item-title>Resultados de investigación</v-list-item-title>
+            </v-list-item>
+
+            <v-list-item to='/inicio/nuevoResultado'>
+              <v-list-item-icon><v-icon>group_work</v-icon></v-list-item-icon>
+              <v-list-item-title>Registrar resultado de investigación contraseña</v-list-item-title>
+            </v-list-item>
+
+          <v-list-item to='/inicio/usuario'>
+            <v-list-item-icon><v-icon>account_circle</v-icon></v-list-item-icon>
+            <v-list-item-title>Información de usuario</v-list-item-title>
           </v-list-item>
 
-          <v-list-item @click="openCloseDialog(true)">
-            <v-list-item-icon><v-icon>login</v-icon></v-list-item-icon>
-            <v-list-item-title>Iniciar sesión</v-list-item-title>
-          </v-list-item>
+            <v-divider></v-divider>
 
-          <v-list-item to='/registro'>
-            <v-list-item-icon><v-icon>create</v-icon></v-list-item-icon>
-            <v-list-item-title>Registrarse</v-list-item-title>
-          </v-list-item>
-
-          <v-list-item to='/contrasena'>
-            <v-list-item-icon><v-icon>vpn_key</v-icon></v-list-item-icon>
-            <v-list-item-title>Recuperar contraseña</v-list-item-title>
-          </v-list-item>
-
-          <!--<v-list-item to='/estadisticas'>
-            <v-list-item-icon><v-icon>analytics</v-icon></v-list-item-icon>
-            <v-list-item-title>Estadísticas</v-list-item-title>
-          </v-list-item>-->
-
-          <v-divider></v-divider>
-
-          <v-list-item @click="sideMenu = false">
-            <v-list-item-icon><v-icon>cancel</v-icon></v-list-item-icon>
-            <v-list-item-title>Cerrar</v-list-item-title>
-          </v-list-item>
+            <v-list-item @click="closeSession">
+              <v-list-item-icon><v-icon>cancel</v-icon></v-list-item-icon>
+              <v-list-item-title>Cerrar sesión</v-list-item-title>
+            </v-list-item>
+            
+          </div>
 
         </v-list-item-group>
       </v-list>
@@ -70,29 +106,25 @@
       logo: logo,
       sena: sena,
       sideMenu: false,
-      inicioSesion: false,
-      show1: false,
-      documentoLogin: '',
-      contrasenaLogin: '',
-      documentoValidacion: [
-        v => !!v || 'El número de documento es requerido.',
-        v => (v && v.length <= 11) || 'La cantidad de números no es válida.',
-        v => /^([0-9])*$/.test(v) || 'El número de documento no puede contener caracteres alfabéticos.',
-      ],
-      confirmarContrasena: [
-        v => !!v || 'La contraseña es obligatoria.',
-        v => (v && v.length >= 8) || 'La contraseña debe tener más de 8 caracteres.',
-      ],
-      textoLogin: '',
-      alertaLogin: false,
-
+      session: '',
     }),
     computed: {
       ...mapGetters(['route', 'dialogLogin']),
     },
-    mounted() {},
+    mounted() {
+      this.configSession();
+    },
     methods: {
       ...mapActions(['openCloseDialog']),
+      configSession() {
+        this.session = localStorage.session;
+        console.log(localStorage.session);
+      },
+      closeSession() {
+        localStorage.clear();
+        localStorage.session = false;
+        window.location.href = '/';
+      }
     }
   };
 

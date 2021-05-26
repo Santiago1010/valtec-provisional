@@ -71,11 +71,13 @@
 					localStorage.name = response.data.nombre_usuario;
 					localStorage.lastName = response.data.apellido_usuario;
 					localStorage.role = response.data.id_rol;	
-					localStorage.session = true;
+					//localStorage.session = true;
 
-					this.$router.push('/inicio');
+					//this.$router.push('/inicio');
 					this.resetValidation();
-					this.modificarEstadoUsuario(true)
+
+					console.log(response.data)
+
 				});
 
 			},
