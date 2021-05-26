@@ -1,3 +1,4 @@
+  
 <template>
 
   <div>
@@ -149,81 +150,51 @@
 </template>
 
 <script>
-
   import { mapState, mapMutations, mapActions, mapGetters } from 'vuex'
-
   export default {
-
     name: 'MenuIndex',
     data: () => ({
-
       menuLateral: false,
       inicioSesion: false,
       show1: false,
       documentoLogin: '',
       contrasenaLogin: '',
       documentoValidacion: [
-
       v => !!v || 'El número de documento es requerido.',
       v => (v && v.length <= 11) || 'La cantidad de números no es válida.',
       v => /^([0-9])*$/.test(v) || 'El número de documento no puede contener caracteres alfabéticos.',
-
       ],
       confirmarContrasena: [
-
       v => !!v || 'La contraseña es obligatoria.',
       v => (v && v.length >= 8) || 'La contraseña debe tener más de 8 caracteres.',
-
       ],
       textoLogin: '',
       alertaLogin: false,
-
     }),
     computed: {
-
       ...mapGetters(['documento', 'rol', 'ruta']),
-
     },
     mounted() {
-
     },
     methods: {
-
       ...mapActions(['validarInicio']),
-
       cerrarLogin: function() {
-
         this.inicioSesion = false;
         this.documentoLogin = '';
         this.contrasenaLogin = '';
-
       },
-
       iniciarSesion: function () {
-
         axios.post(this.ruta + 'recepcionLogin.php', {documento:this.documentoLogin, contrasena:this.contrasenaLogin}).then(response => {
-
           if (response.data != null && response.data != false && response.data != "") {
-
             if (this.validarInicio(response.data)) {
-
               this.$router.push('inicio')
-
             }
-
           }else {
-
             this.alertaLogin = true;
             this.textoLogin = 'Error al iniciar sesión.';
-
           }
-
         });
-
       }
-
     }
-
   };
-
 </script>

@@ -95,33 +95,20 @@
 </template>
 
 <script>
-
 	import { mapActions } from 'vuex'
-
 	export default {
-
 		name: 'MenuIndex',
 		data: () => ({
-
 			menuLateral: false,
-
 		}),
 		methods: {
-
 			...mapActions(['eliminarSesion']),
-
 			cerrarSesion: function() {
 				
 				this.menuLateral = false
-
 				this.eliminarSesion();
-
 				this.$router.push('/');
-
 			}
-
 		}
-
 	};
-
 </script>
