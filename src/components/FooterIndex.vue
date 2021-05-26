@@ -144,7 +144,7 @@
 		}),
 		computed: {
 
-			...mapGetters(['ruta']),
+			...mapGetters(['route']),
 
 		},
 		methods: {
@@ -153,7 +153,7 @@
 
 				this.$refs.form.validate()
 
-				axios.post(this.ruta + 'recepcionCorreoContacto.php', {nombre:this.nombre, correo:this.correo, celular:this.celular, mensaje:this.mensaje}).then(response => {
+				axios.post(this.route + 'recepcionCorreoContacto.php', {nombre:this.nombre, correo:this.correo, celular:this.celular, mensaje:this.mensaje}).then(response => {
 
 					this.snackbar = true;
 					this.textoSnackbar = response.data;

@@ -45,13 +45,7 @@
 		methods: {
 			validateSession: function() {
 				if (localStorage.document == undefined || localStorage.email == undefined || localStorage.name == undefined || localStorage.lastName == undefined || localStorage.role == undefined || localStorage.session == false) {
-					//window.location.href = '/';
-					console.log(localStorage.document);
-					console.log(localStorage.email);
-					console.log(localStorage.name);
-					console.log(localStorage.lastName);
-					console.log(localStorage.role);
-					console.log(localStorage.session);
+					window.location.href = '/';
 				}
 			},
 		}

@@ -13,7 +13,7 @@
       <v-list nav dense>
         <v-list-item-group active-class="orange accent-4--text text--accent-4">
 
-          <div v-if="session == false">
+          <div v-if="sessionUser == false">
             <v-list-item to='/'>
               <v-list-item-icon><v-icon>mdi-home</v-icon></v-list-item-icon>
               <v-list-item-title>Inicio</v-list-item-title>
@@ -46,15 +46,11 @@
               <v-list-item-title>Cerrar</v-list-item-title>
             </v-list-item>
           </div>
+
           <div v-else>
-            <v-list-item to='/'>
+            <v-list-item to='/inicio'>
               <v-list-item-icon><v-icon>not_started</v-icon></v-list-item-icon>
               <v-list-item-title>Inicio</v-list-item-title>
-            </v-list-item>
-
-            <v-list-item to='/inicio'>
-              <v-list-item-icon><v-icon>login</v-icon></v-list-item-icon>
-              <v-list-item-title>Iniciar sesión</v-list-item-title>
             </v-list-item>
 
             <v-list-item to='/inicio/resultados'>
@@ -67,10 +63,10 @@
               <v-list-item-title>Registrar resultado de investigación contraseña</v-list-item-title>
             </v-list-item>
 
-          <v-list-item to='/inicio/usuario'>
-            <v-list-item-icon><v-icon>account_circle</v-icon></v-list-item-icon>
-            <v-list-item-title>Información de usuario</v-list-item-title>
-          </v-list-item>
+            <v-list-item to='/inicio/usuario'>
+              <v-list-item-icon><v-icon>account_circle</v-icon></v-list-item-icon>
+              <v-list-item-title>Información de usuario</v-list-item-title>
+            </v-list-item>
 
             <v-divider></v-divider>
 
@@ -78,54 +74,52 @@
               <v-list-item-icon><v-icon>cancel</v-icon></v-list-item-icon>
               <v-list-item-title>Cerrar sesión</v-list-item-title>
             </v-list-item>
-            
           </div>
 
-        </v-list-item-group>
-      </v-list>
-    </v-navigation-drawer>
+          </v-list-item-group>
+        </v-list>
+      </v-navigation-drawer>
 
-    <FormLogin></FormLogin>
-  </div>
-</template>
+      <FormLogin></FormLogin>
+    </div>
+  </template>
 
-<script>
-  import { mapState, mapMutations, mapActions, mapGetters } from 'vuex'
-  import logo from '../assets/imagenes/logos/isologo.png'
-  import sena from '../assets/imagenes/logos/sena.png'
+  <script>
+    import { mapState, mapMutations, mapActions, mapGetters } from 'vuex'
+    import logo from '../assets/imagenes/logos/isologo.png'
+    import sena from '../assets/imagenes/logos/sena.png'
 
-  import FormLogin from './FormLogin.vue'
+    import FormLogin from './FormLogin.vue'
 
-  export default {
+    export default {
 
-    name: 'MenuIndex',
-    components: {
-      FormLogin,
-    },
-    data: () => ({
-      logo: logo,
-      sena: sena,
-      sideMenu: false,
-      session: '',
-    }),
-    computed: {
-      ...mapGetters(['route', 'dialogLogin']),
-    },
-    mounted() {
-      this.configSession();
-    },
-    methods: {
-      ...mapActions(['openCloseDialog']),
-      configSession() {
-        this.session = localStorage.session;
-        console.log(localStorage.session);
+      name: 'MenuIndex',
+      components: {
+        FormLogin,
       },
-      closeSession() {
-        localStorage.clear();
-        localStorage.session = false;
-        window.location.href = '/';
+      data: () => ({
+        logo: logo,
+        sena: sena,
+        sideMenu: false,
+      }),
+      computed: {
+        ...mapGetters(['route', 'dialogLogin', 'sessionUser']),
+      },
+      mounted() {
+        this.configSession();
+      },
+      methods: {
+        ...mapActions(['openCloseDialog', 'setSessionUser']),
+        configSession() {
+          this.setSessionUser(true);
+        },
+        closeSession() {
+          localStorage.clear();
+          localStorage.session = false;
+          this.setSessionUser(false);
+          window.location.href = '/';
+        }
       }
-    }
-  };
+    };
 
-</script>
+  </script>

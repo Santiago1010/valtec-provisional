@@ -9,6 +9,7 @@ export default new Vuex.Store({
     dialogLogin: false,
     snackbar: false,
     snackbarText: '',
+    sessionUser: false,
   },
   actions: {
     openCloseDialog({ commit }, newState) {
@@ -19,7 +20,10 @@ export default new Vuex.Store({
     },
     modifyTextSnackbar({ commit }, newText) {
       commit('newTextSnackbar', newText)
-    }
+    },
+    setSessionUser({ commit },newState) {
+      commit('newSsessionUser', newState);
+    },
   },
   mutations: {
     dialogLoginOpenClose(state, newState) {
@@ -31,12 +35,16 @@ export default new Vuex.Store({
     newTextSnackbar(state, newText) {
       state.snackbarText = newText;
     },
+    newSsessionUser(state, newState) {
+      state.sessionUser = newState;
+    }
   },
   getters: {
     route: state => state.route,
     dialogLogin: state => state.dialogLogin,
     snackbar: state => state.snackbar,
-    snackbarText: state => state.snackbarText
+    snackbarText: state => state.snackbarText,
+    sessionUser: state => state.sessionUser
   }
 
 })

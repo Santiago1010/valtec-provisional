@@ -1,10 +1,7 @@
 <template @scroll="aumentarEstadisticas">
 	<div>
 		<app-carrusel></app-carrusel>
-		<app-informacion></app-informacion>
-		<div class="d-none d-md-flex d-lg-none">
-			<app-conceptos></app-conceptos>
-		</div>
+		<!--<app-informacion></app-informacion>-->
 		<app-estadisticas></app-estadisticas>
 		<app-footer></app-footer>
 	</div>
@@ -17,6 +14,8 @@
 	import SeccionEstadisticasIndex from '../components/SeccionEstadisticasIndex.vue';
 	import FooterIndex from '../components/FooterIndex.vue';
 	import MenuIndex from '../components/MenuIndex.vue';
+
+	import { mapGetters, mapActions } from 'vuex'
 
 	export default {
 		name: 'Principal',
@@ -31,6 +30,15 @@
 		data: () => ({
 			menuLateral: false,
 		}),
+		mounted() {
+			this.setSessionUser(false);
+		},
+		computed: {
+			...mapGetters(['sessionUser'])
+		},
+		methods: {
+			...mapActions(['setSessionUser'])
+		}
 	}
 
 </script>
