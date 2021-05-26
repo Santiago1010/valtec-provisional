@@ -6,7 +6,7 @@
 				<v-flex class="mt-5" xs12 lg3>
 					<v-card class="mx-auto hoverArriba" max-width="300" min-width="300" min-height="115" max-height="115">
 						<v-card-text>
-							<h2 class="textoCentrado">{{contadorTotalRI}}</h2>
+							<h2 class="textoCentrado">{{ totalRI }}</h2>
 							<p class="textoCentrado">RESULTADOS DE INVESTIGACIÓN REGISTRADOS</p>
 						</v-card-text>
 					</v-card>
@@ -15,7 +15,7 @@
 				<v-flex class="mt-5" xs12 lg3>
 					<v-card class="mx-auto hoverArriba" max-width="300" min-width="300" min-height="115" max-height="115">
 						<v-card-text>
-							<h2 class="textoCentrado">{{contadorTotalPatentes}}</h2>
+							<h2 class="textoCentrado">{{ contadorTotalPatentes }}</h2>
 							<p class="textoCentrado">POSIBLES PATENTES</p>
 						</v-card-text>
 					</v-card>
@@ -24,7 +24,7 @@
 				<v-flex class="mt-5" xs12 lg3>
 					<v-card class="mx-auto hoverArriba" max-width="300" min-width="300" min-height="115" max-height="115">
 						<v-card-text>
-							<h2 class="textoCentrado">{{contadorTotalMercado}}</h2>
+							<h2 class="textoCentrado">{{ totalMarket }}</h2>
 							<p class="textoCentrado">RESULTADOS DE INVESTIGACIÓN LISTOS PARA INICIAR EN EL MERCADO</p>
 						</v-card-text>
 					</v-card>
@@ -33,7 +33,7 @@
 				<v-flex class="mt-5" xs12 lg3>
 					<v-card class="mx-auto hoverArriba" max-width="300" min-width="300" min-height="115" max-height="115">
 						<v-card-text>
-							<h2 class="textoCentrado">{{contadorTotalUsuarios}}</h2>
+							<h2 class="textoCentrado">{{ totalUsers }}</h2>
 							<p class="textoCentrado">USUARIOS REGISTRADOS</p>
 						</v-card-text>
 					</v-card>
@@ -54,41 +54,60 @@
 			contadorTotalPatentes: 0,
 			contadorTotalMercado: 0,
 			contadorTotalUsuarios: 0,
-			limiteTotalRI: 0,
+			totalRI: 0,
 			limiteTotalPatentes: 0,
-			limiteTotalMercado: 0,
-			limiteTotalUsuarios: 0,
+			totalMarket: 0,
+			totalUsers: 0,
 		}),
 		mounted () {
-			//this.consultarCantidadResultadosRegistrados();
-			//this.consultarCantidadResultadosMercado();
-			//this.consultarCantidadResultadosMercado();
-			//this.aumentarEstadisticas();
+			this.readRegisterResults();
+			this.readResultsBigger();
+			this.readTotalUsers();
 		},
 		computed: {
 			...mapGetters(['route']),
 		},
 		methods: {
-			consultarCantidadResultadosRegistrados: function () {
-				axios.post(this.route + 'recepcionConsultaEstadisticasIndex.php', {estadistica: 'totalRI'}).then(response => {
-					this.limiteTotalRI = response.data.totalRI;
+			readRegisterResults: function () {
+				axios.post(this.route + 'receivers/receptionStats.php', { typeFunction:'readRegisterResults' }).then(response => {
+					this.totalRI = response.data.total;
 				});
 			},
-			consultarCantidadResultadosMercado: function () {
-				axios.post(this.route + 'recepcionConsultaEstadisticasIndex.php', {estadistica: 'totalMercado'}).then(response => {
-					this.limiteTotalMercado = response.data.totalMercado;
+			readResultsBigger: function () {
+				axios.post(this.route + 'receivers/receptionStats.php', { typeFunction:'readResultsBigger' }).then(response => {
+					this.totalMarket = response.data.total;
 				});
 			},
-			consultarCantidadResultadosMercado: function () {
-				axios.post(this.route + 'recepcionConsultaEstadisticasIndex.php', {estadistica: 'totalUsuarios'}).then(response => {
-					this.limiteTotalUsuarios = response.data.totalUsuarios;
+			readTotalUsers: function () {
+				axios.post(this.route + 'receivers/receptionStats.php', { typeFunction:'readTotalUsers' }).then(response => {
+					this.totalUsers = response.data.total;
 				});
 			},
-			aumentarEstadisticas: function () {
-				this.contadorTotalRI = this.limiteTotalPatentes;
-				this.contadorTotalMercado = this.limiteTotalMercado;
-				this.contadorTotalUsuarios = this.limiteTotalUsuarios;
-			}
 		}
 	}
 </script>
+
+<style type="text/css">
+	.seccionEstadisticas {
+		background-image: url('../assets/imagenes/fondos/Sin-título-3.gif');
+		min-width: 100%;
+		max-width: 100%;
+		min-height: 100vh;
+		background-size: cover;
+	}
+	.textoCentrado {
+		text-align: center
+	}
+	h2.textoCentrado {
+		font-weight: bold;
+		font-size: 3em;
+		margin-bottom: 10px;
+	}
+	.mt-5 {
+		transition: .5s;
+	}
+	.mt-5:hover {
+		transition: .5s;
+		transform: translateY(-10px);
+	}
+</style>
