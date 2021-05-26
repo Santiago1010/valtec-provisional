@@ -18,7 +18,7 @@
             <v-text-field v-model="userData.passwordUser" type="password" :rules="[rules.required, rules.minPassword]" label="Contraseña que usará en la plataforma" counter required></v-text-field>
             <v-text-field v-model="userData.confirmPassword" :rules="[rules.required, rules.minPassword, rules.confirmPassword]" :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'" :type="show1 ? 'text' : 'password'" label="Confirme la contraseña" counter @click:append="show1 = !show1" required></v-text-field>
             <v-select v-model="userData.roleUser" :items="roles" item-value="id_rol" item-text="nombre_rol" :rules="[v => !!v || 'Debe seleccionar unrol.']" label="Rol" required></v-select>
-            <v-select v-model="userData.regionalUser" :items="regionals" item-value="id_regional" item-text="nombre_regional" :rules="[v => !!v || 'Debe seleccionar una regional.']" label="Regional" required></v-select>
+            <v-select v-model="userData.regionalUser" :items="regionals" item-value="id_regional" item-text="nombre_regional" :rules="[v => !!v || 'Debe seleccionar una regional.']" label="Regional" @change="readCenters" required></v-select>
             <v-select v-model="userData.centerUser" :items="centers" item-value="id_centro" item-text="nombre_centro" :rules="[v => !!v || 'Debe seleccionar un centro de formacion.']" label="Centro de formación" required></v-select>
             <br/>
             <v-btn type="submit" :disabled="!validFormCreateUser" color="primary" @click="validate" @submit="validate">Enviar</v-btn>
@@ -49,10 +49,11 @@
         userData: {
           documentUser: '',
           nameUser: '',
-          phoneNameUser: '',
+          lastNameUser: '',
           emailUser: '',
           passwordUser: '',
           confirmPassword: '',
+          roleUser: '',
           regionalUser: '',
           centerUser: ''
         },
@@ -72,22 +73,25 @@
       }
 
     },
-    mounted () {},
+    mounted () {
+      this.readRegionals();
+      this.readRoles();
+    },
     computed: {
       ...mapGetters(['route']),
     },
     methods: {
-      ...mapActions(['openCloseSnackbar', 'newTextSnackbar']),
+      ...mapActions(['modifyStateSnackbar', 'modifyTextSnackbar']),
       createUser() {
-        axios.post(this.ruta + '/receivers/recepcionUsers.php', {typeFunction: 'createUser', dataUser:this.userData}).then(response => {
-          this.openCloseSnackbar(false);
-          this.openCloseSnackbar(true);
+        axios.post(this.route + 'receivers/receptionUsers.php', { typeFunction:'createUser', dataUser:this.userData }).then(response => {
+          this.modifyStateSnackbar(false);
+          this.modifyStateSnackbar(true);
           if (response.data == 1) {
-            this.newTextSnackbar('El usuario ha sido registrado. Se ha envíado un correo a la cuenta de correo electrónico registrada para confirmar. En caso de no confirmar, no podrá acceder a la plataforma.');
+            this.modifyTextSnackbar('El usuario ha sido registrado. Se ha envíado un correo a la cuenta de correo electrónico registrada para confirmar. En caso de no confirmar, no podrá acceder a la plataforma.');
             this.reset();
           }else {
-            this.newTextSnackbar(response.data);
-            this.userData.password = '';
+            this.modifyTextSnackbar(response.data);
+            this.userData.confirmPassword = '';
             this.userData.passwordUser = '';
           }
         });
@@ -103,10 +107,20 @@
         this.$refs.formCreateUser.resetValidation()
       },
       readRegionals() {
-        axios.post(this.ruta + '/receivers/recepcionUsers.php', {typeFunction: 'readRegionals'}).then(response => {
-          
+        axios.post(this.route + 'receivers/receptionLocation.php', { typeFunction:'readRegionals' }).then(response => {
+          this.regionals = response.data;
         }).catch(error => console.log(error));
-      }
+      },
+      readCenters() {
+        axios.post(this.route + 'receivers/receptionLocation.php', { typeFunction:'readCenters', idRegional:this.userData.regionalUser }).then(response => {
+          this.centers = response.data;
+        }).catch(error => console.log(error));
+      },
+      readRoles() {
+        axios.post(this.route + 'receivers/receptionLocation.php', { typeFunction:'readRoles' }).then(response => {
+          this.roles = response.data;
+        }).catch(error => console.log(error));
+      },
     }
   }
 </script>
