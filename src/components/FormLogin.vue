@@ -65,12 +65,14 @@
 			iniciarSesion: function() {
 				this.clearSession();
 
-				axios.post(this.route + 'receivers/receptionUsers.php', {typeFunction:'readUserLogin', documentLogin:this.documentLogin, passwordLogin:this.passwordLogin}).then(response => {
+				axios.post(this.route + 'receivers/receptionUsers.php', { typeFunction:'readUserLogin', documentLogin:this.documentLogin, passwordLogin:this.passwordLogin }).then(response => {
 					localStorage.document = response.data.documento_usuario;
 					localStorage.email = response.data.correo_usuario;
 					localStorage.name = response.data.nombres_usuarios;
 					localStorage.lastName = response.data.apellidos_usuarios;
 					localStorage.role = response.data.id_rol;	
+					localStorage.phone = response.data.celular_usuarios;
+					localStorage.documentType = response.data.tipo_documento;	
 					localStorage.session = true;
 
 					this.setSessionUser(true);
