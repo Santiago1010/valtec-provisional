@@ -21,12 +21,8 @@
 		data: () => ({
 			menuLateral: false,
 		}),
-		mounted() {
-			this.verificarInicio();
-		},
-		methods: {
-			...mapActions(['verificarInicio']),
-		}
+		mounted() {},
+		methods: {}
 	}
 </script>
 
