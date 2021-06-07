@@ -396,7 +396,7 @@
 					this.result.investigationGroupResult = response.data.id_grupo;
 					this.result.yearResult = parseInt(response.data.ano_proyecto);
 					this.result.reviewResult = response.data.resumen_proyecto;
-					this.result.acceptResult = true;
+					this.result.acceptResult = response.data.cede_derechos == 'Sí' ? 'checked' : 'unchecked';
 					this.setPriorization();
 					this.registrationDate();
 					this.setKnowledesNetworks();
