@@ -26,10 +26,14 @@
 			menuLateral: false,
 		}),
 		mounted() {
-			this.verificarInicio();
+			this.validateSession();
 		},
 		methods: {
-			...mapActions(['verificarInicio']),
+			validateSession: function() {
+				if (localStorage.document == undefined || localStorage.email == undefined || localStorage.name == undefined || localStorage.lastName == undefined || localStorage.role == undefined || localStorage.session == false) {
+					window.location.href = '/';
+				}
+			},
 		}
 	}
 </script>

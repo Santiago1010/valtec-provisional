@@ -19,6 +19,16 @@
 		},
 		data: () => ({
 			menuLateral: false,
-		})
+		}),
+		mounted() {
+			this.validateSession();
+		},
+		methods: {
+			validateSession: function() {
+				if (localStorage.document == undefined || localStorage.email == undefined || localStorage.name == undefined || localStorage.lastName == undefined || localStorage.role == undefined || localStorage.session == false) {
+					window.location.href = '/';
+				}
+			},
+		}
 	}
 </script>

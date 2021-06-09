@@ -268,6 +268,7 @@
 		}),
 		mounted() {
 			this.readResearchResult();
+			this.validateSession();
 		},
 		computed: {
 			...mapGetters(['route']),
@@ -455,6 +456,11 @@
 				}else {
 					this.snackbar = true;
 					this.snackbarText = 'Debe completar toda la sección para poder seguir.';
+				}
+			},
+			validateSession: function() {
+				if (localStorage.document == undefined || localStorage.email == undefined || localStorage.name == undefined || localStorage.lastName == undefined || localStorage.role == undefined || localStorage.session == false) {
+					window.location.href = '/';
 				}
 			},
 		}

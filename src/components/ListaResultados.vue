@@ -7,7 +7,8 @@
 						<v-text-field dark v-model="filterListResults.resultName" label="Filtrar por nombre del resultado de investigación" required></v-text-field>
 					</v-col>
 					<v-col cols="12" md="4">
-						<v-text-field dark v-model="filterListResults.investigatorName" label="Filtrar por nombre de investigador" required></v-text-field>
+						<!--<v-text-field dark v-model="filterListResults.investigatorName" label="Filtrar por nombre de investigador" required></v-text-field>-->
+						<v-select dark v-model="filterListResults.trlResult" :items="trlList" label="Filtrar por TRL del resultado de investigación" required></v-select>
 					</v-col>
 					<v-col cols="12" md="4">
 						<v-text-field dark v-model="filterListResults.sgpsResult" label="Filtrar por código (SGPS, SIGP, Iniciativa de centro)" required></v-text-field>
@@ -15,16 +16,13 @@
 				</v-row>
 
 				<v-row>
-					<v-col cols="12" md="3">
-						<v-select dark v-model="filterListResults.trlResult" :items="trlList" label="Filtrar por TRL del resultado de investigación" required></v-select>
-					</v-col>
-					<v-col cols="12" md="3">
+					<v-col cols="12" md="4">
 						<v-select dark v-model="filterListResults.regionalResult" :items="regionals" item-value="id_regional" item-text="nombre_regional" label="Filtrar por regional del resultado de investigación"></v-select>
 					</v-col>
-					<v-col cols="12" md="3">
-						<v-btn color="institucional" style="width: 100%; margin-top: 10px;" @click="readResults">Filtrar RI</v-btn>
+					<v-col cols="12" md="4">
+						<v-btn color="institucional" style="width: 100%; margin-top: 10px;" @click="applyFilter">Filtrar RI</v-btn>
 					</v-col>
-					<v-col cols="12" md="3">
+					<v-col cols="12" md="4">
 						<v-btn color="info" style="width: 100%; margin-top: 10px;" @click="generalReport">Descargar reporte</v-btn>
 					</v-col>
 				</v-row>
@@ -33,7 +31,7 @@
 		<v-divider dark></v-divider>
 		<div v-if="resultList[0] == null">
 			<br>
-			<h1 style="text-align: center; color: #FF6B00;">Al aplicar un filtro, se enlistarán los resultados de investigación.</h1>
+			<h1 style="text-align: center; color: #FF6B00;">Al aplicar un filtro, haciendo click al botón naranja, se enlistarán los resultados de investigación. Este filtro también se aplicará al reporte general. Si el filtro fue aplicado, pero aún ve este mensaje, es debido a que no se encontraron coincidencias con lo buscado.</h1>
 		</div>
 
 		<div v-else>
@@ -50,7 +48,7 @@
 
 				<v-row>
 					<v-col cols="12" md="3">
-						<v-btn style="min-width: 90%; max-width: 90%; margin-left: 5%;" color="primary" large @click="especificReport(dato.id_proyecto)">Descargar reporte</v-btn>
+						<v-btn style="min-width: 90%; max-width: 90%; margin-left: 5%;" color="primary" large @click="specificReport(dato.id_proyecto)">Descargar reporte</v-btn>
 					</v-col>
 					<v-col cols="12" md="3">
 						<v-btn style="min-width: 90%; max-width: 90%; margin-left: 5%;" color="warning" large :to="'/inicio/modificarResultado/' + dato.id_proyecto">Modificar</v-btn>
@@ -75,18 +73,20 @@
 		name: 'ListaResultados',
 		data: () => ({
 			resultList: [null],
-			trlList: ['', 'TRL 1', 'TRL 2', 'TRL 3', 'TRL 4', 'TRL 5', 'TRL 6', 'TRL 7', 'TRL 8', 'TRL 9'],
+			trlList: ['TRL 1', 'TRL 2', 'TRL 3', 'TRL 4', 'TRL 5', 'TRL 6', 'TRL 7', 'TRL 8', 'TRL 9'],
 			regionals: [''],
 			filterListResults: {
 				resultName: '',
 				investigatorName: '',
 				sgpsResult: '',
 				trlResult: null,
-				regionalResult: '',
+				regionalResult: 0,
 			},
 			checkbox: '',
+			comeResult: [],
 		}),
 		mounted () {
+			this.readResults();
 			this.readRegionals();
 			this.validateSession();
 		},
@@ -105,25 +105,49 @@
 				});
 			},
 			generalReport() {
-				axios.post(this.route + 'recepcionReportes.php', {reporteGeneral:true, nombreTecnologia:this.nombreResultado, nombreInvestigador:this.nombreInvestigador, filtrarCodigo:this.codigoResultado, trlProyecto:this.trlResultado, regionalProyecto:this.regionalResultado, proyectosPropios:this.checkbox}).then(response => {
-					window.open(this.route + response.data);
-				});
+				if (this.resultList[0] != null) {
+					axios.post(this.route + 'receivers/receptionReports.php', { typeFunction:'createGeneralReport', resultList:this.resultList }).then(response => {
+						window.open(this.route + response.data);
+					});
+				}else {
+					axios.post(this.route + 'receivers/receptionReports.php', { typeFunction:'createGeneralReport', resultList:this.comeResult }).then(response => {
+						window.open(this.route + response.data);
+					});
+				}
 			},
-			especificReport(id) {
-				axios.post(this.route + 'recepcionReportes.php', {reporteEspecifico:id}).then(response => {
+			specificReport(id) {
+				axios.post(this.route + 'receivers/receptionReports.php', { typeFunction:'createSpecificReport', idRi:id }).then(response => {
 					window.open(this.route + response.data);
 				});
 			},
 			readResults() {
-				if (this.filterListResults.resultName == "" && this.filterListResults.investigatorName == "" && this.filterListResults.sgpsResult == "" && this.filterListResults.trlResult == "" && this.filterListResults.regionalResult == "") {
+				axios.post(this.route + 'receivers/receptionResults.php', { typeFunction:'readResultList', document:localStorage.document }).then(response => {
+					this.comeResult = response.data;
+				});
+			},
+			applyFilter() {
+				this.resultList = this.comeResult;
+				if (this.filterListResults.resultName != "") {
+					this.resultList = this.resultList.filter(data => data.nombre_proyecto.toLowerCase().includes(this.filterListResults.resultName.toLowerCase()))
+				}
+
+				if (this.filterListResults.sgpsResult != "") {
+					this.resultList = this.resultList.filter(data => data.sgps_proyecto == this.filterListResults.sgpsResult)
+				}
+
+				if (this.filterListResults.trlResult != "" && this.filterListResults.trlResult != undefined) {
+					this.resultList = this.resultList.filter(data => data.trl_proyecto == this.filterListResults.trlResult)
+				}
+
+				if (this.filterListResults.regionalResult != "" && this.filterListResults.regionalResult != undefined) {
+				 	this.resultList = this.resultList.filter(data => parseInt(data.id_regional) == parseInt(this.filterListResults.regionalResult))
+				}
+
+				if (this.filterListResults.resultName == "" && this.filterListResults.investigatorName == "" && this.filterListResults.sgpsResult == "" && this.filterListResults.trlResult == "" && this.filterListResults.regionalResult == "" && this.filterListResults.trlResult == undefined || this.filterListResults.regionalResult == undefined) {
 					this.resultList = this.resultList.splice(1);
 					this.resultList[0] = null;
-				}else {
-					axios.post(this.route + 'receivers/receptionResults.php', { typeFunction:'readResultList' }).then(response => {
-						this.resultList = response.data;
-					});
 				}
-			},
+			}
 		}
 	}
 </script>

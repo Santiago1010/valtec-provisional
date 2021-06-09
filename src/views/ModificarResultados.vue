@@ -225,6 +225,7 @@
 			this.setSubAreas();
 			this.setInvestigationGroup();
 			this.readInvestigatorsResult();
+			this.validateSession();
 		},
 		computed: {
 			...mapGetters(['route']),
@@ -419,6 +420,11 @@
 		    	this.result.nameInvestigator[position] = name;
 		    	this.result.roleInvestigator[position] = role;
 		    },
+		    validateSession: function() {
+				if (localStorage.document == undefined || localStorage.email == undefined || localStorage.name == undefined || localStorage.lastName == undefined || localStorage.role == undefined || localStorage.session == false) {
+					window.location.href = '/';
+				}
+			},
 		}
 	}
 </script>

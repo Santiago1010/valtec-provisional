@@ -200,6 +200,7 @@
 			this.registrationDate();
 			this.setKnowledesNetworks();
 			this.setRegionals();
+			this.validateSession();
 		},
 		computed: {
 			...mapGetters(['route']),
@@ -341,6 +342,11 @@
 		    resetValidation () {
 		        this.$refs.formCreateResults.resetValidation()
 		    },
+		    validateSession: function() {
+				if (localStorage.document == undefined || localStorage.email == undefined || localStorage.name == undefined || localStorage.lastName == undefined || localStorage.role == undefined || localStorage.session == false) {
+					window.location.href = '/';
+				}
+			},
 		}
 	}
 </script>
