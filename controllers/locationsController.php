@@ -14,19 +14,11 @@ class locationsController {
 	}
 
 	public function readRegionals() {
-		return json_encode($this->model->readRegionalsDB(), JSON_UNESCAPED_UNICODE);
+		return $this->model->readRegionalsDB();
 	}
 
 	public function readCenters($idRegional) {
-		return json_encode($this->model->readCentersDB($idRegional), JSON_UNESCAPED_UNICODE);
-	}
-
-	public function readRoles() {
-		return json_encode($this->model->readRolesDB(), JSON_UNESCAPED_UNICODE);
-	}
-
-	public function readKnowledgeNetworks() {
-		return json_encode($this->model->readKnowledgeNetworksDB(), JSON_UNESCAPED_UNICODE);
+		return $this->model->readCentersDB($idRegional);
 	}
 
 	public function readInvestigationGroups($idCenter) {

@@ -13,12 +13,11 @@ class locationsModel {
 		$this->connection = connection::getInstance();
 	}
 
-	public function readRegionalsDB() {
+	public function readRegionalsDB() : array {
 		try {
-			$ps = $this->connection->getPrepareStatement(['LocationsModel', 'readRegionals']);
-			return $this->connection->getFetch($ps, true);
+			return $this->connection->getFetch($this->connection->getPrepareStatement(['LocationsModel', 'readRegionals']), true);
 		} catch (PDOException $e) {
-			return 'Error PDO: ' . $e;
+			return ['Error PDO: ' . $e];
 		}
 	}
 

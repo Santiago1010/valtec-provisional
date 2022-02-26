@@ -15,8 +15,7 @@ class usersModel {
 
 	public function createUserDB(usersClass $user) {
 		try {
-			$ps = $this->connection->getPrepareStatement(['UsersModel', 'createUser']);
-			return $this->connection->getExecute($this->connection->getBindValue(true, $ps, $user, ['__construct', 'getEmail', 'getCity']));
+			return $this->connection->getExecute($this->connection->getBindValue(true, $this->connection->getPrepareStatement(['UsersModel', 'createUser']), $user, ['__construct', 'getCity']));
 		} catch (PDOException $e) {
 			return 'Error PDO: ' . $e;
 		}

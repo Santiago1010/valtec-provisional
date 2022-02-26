@@ -8,7 +8,7 @@ header('Content-type: application/json');
 ini_set("default_charset", "UTF-8");
 
 // Se traen las funciones.
-require '../controllers/functions/validationClass.php';
+require '../controllers/functions/extraController.php';
 
 // Se traen los controladores.
 require '../controllers/locationsController.php';
@@ -16,7 +16,7 @@ require '../controllers/locationsController.php';
 /**
  * Clase que recibirá los datos y las acciones de los usuarios.
  */
-class receptionLocation extends validationClass {
+class receptionLocation extends extraController {
 
 	private $locationsController;
 	
@@ -28,14 +28,14 @@ class receptionLocation extends validationClass {
 		switch ($_POST['typeFunction']) {
 
 			case 'readRegionals':
-				return $this->locationsController->readRegionals();
+				return  $this->jsonString($this->locationsController->readRegionals());
 				break;
 
 			case 'readCenters':
 				if ($this->isEmpty($_POST)) {
-					return $this->locationsController->readCenters($_POST['idRegional']);
+					return $this->jsonString($this->locationsController->readCenters($_POST['idRegional']));
 				}else {
-					return 'Faltan datos.';
+					return $this->jsonString(["status" => "error", "message" => "No se pudo consultar los centros pertenecientes a esa regional"]);
 				}
 				break;
 

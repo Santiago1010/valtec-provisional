@@ -104,11 +104,8 @@ class connection {
 				"updateDataUsers" => "CALL updateDataUser(?, ?, ?, ?, ?, ?)"
 			],
 			"LocationsModel" => [
-				"readRegionals" => "SELECT  `regionales`.`id_regional` AS `id_regional`, `regionales`.`nombre_regional` AS `nombre_regional` FROM `regionales`",
-				"readCenters" => "SELECT `centros`.`id_centro` AS `id_centro`, `centros`.`nombre_centro` AS `nombre_centro`, `centros`.`id_regional` AS `id_regional` FROM `centros` WHERE centros.id_regional = ?",
-				"readRoles" => "SELECT `roles`.`id_rol` AS `id_rol`, `roles`.`nombre_rol` AS `nombre_rol` FROM `roles` WHERE roles.id_rol != 2 AND roles.id_rol != 0",
-				"readKnowledeAreas" => "SELECT `redes_conocimiento`.`id_red` AS `id_red`, `redes_conocimiento`.`nombre_red` AS `nombre_red` FROM `redes_conocimiento`",
-				"readInvestigationGroups" => "SELECT `grupos`.`id_grupo` AS `id_grupo`, `grupos`.`nombre_grupo` AS `nombre_grupo`, `grupos`.`id_centro` AS `id_centro` FROM (`grupos` JOIN `centros` ON (`grupos`.`id_centro` = `centros`.`id_centro`)) WHERE grupos.id_centro = ?"
+				"readRegionals" => "SELECT regional.id_regional AS `id`, CAST(AES_DECRYPT(regional.name_regional, unhex('AF6B5E4E39F974B3F3FB0F22320CC60B')) as char(255) charset utf8mb4) AS `name` FROM regional",
+				"readCenters" => "SELECT centers.id_center AS `id`, centers.code_center AS `code`, CAST(AES_DECRYPT(centers.name_center, unhex('AF6B5E4E39F974B3F3FB0F22320CC60B')) as char(255) charset utf8mb4) AS `name` FROM centers WHERE centers.id_regional = ?"
 			],
 			"StatsModel" => [
 				"readRegisterResults" => "SELECT COUNT(proyectos.id_proyecto) AS total FROM `proyectos`",
